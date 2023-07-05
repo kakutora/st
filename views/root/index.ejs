@@ -1,1 +1,89 @@
-<p>Welcome to the home page!</p>
+<form action="/send" method="post" enctype="application/x-www-form-urlencoded">
+  <table class="inputC">
+    <thead>
+      <tr>
+        <th>
+          <h1>部位</h1>
+        </th>
+        <th>
+          <h1>表現</h1>
+        </th>
+        <th>
+          <h1>プロンプト</h1>
+        </th>
+        <th>
+          <h1>送信</h1>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="text" id="item" name="item" required></td>
+        <td><input type="text" id="item" name="content" required></td>
+        <td><input type="text" id="item" name="code" required></td>
+        <td><button type="submit">Send</button></td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+
+<div class="fil">
+  <div class="filWrap">
+    <select id="filterItem">
+      <option value="">すべての部位</option>
+      <% let uniqueItems = new Set(); %>
+      <% for (let i = 0; i < data.length; i++) { %>
+      <% uniqueItems.add(data[i].item); %>
+      <% } %>
+      <% uniqueItems.forEach(item => { %>
+      <option value="<%= item %>"><%= item %></option>
+      <% }); %>
+    </select>
+
+    <button type="button" class="favFil star-button">
+      <span class="star-icon"></span>
+    </button>
+  </div>
+
+  <input type="text" id="searchInput" placeholder="検索キーワードを入力してください">
+</div>
+
+<table class="container">
+  <thead>
+    <tr>
+      <th>
+        <h1>部位</h1>
+      </th>
+      <th>
+        <h1>表現</h1>
+      </th>
+      <th>
+        <h1>プロンプト</h1>
+      </th>
+    </tr>
+  </thead>
+  <tbody id="tableBody">
+    <% for (let i = 0; i < data.length; i++) { %>
+    <tr data-item="<%= data[i].item %>">
+      <td><%= data[i].item %></td>
+      <td><%= data[i].content %></td>
+      <td><%= data[i].code %></td>
+      <td><button class="copy-button" data-code="<%= data[i].code %>">Copy</button></td>
+      <td>
+        <form action="/fav" method="post">
+          <input type="hidden" name="itemId" value="<%= data[i].id %>">
+          <button type="submit" class="star-button <%= data[i].fav ? 'favorite' : '' %>">
+            <span class="star-icon"></span>
+          </button>
+        </form>
+      </td>
+      <td>
+        <form action="/delete" method="post">
+          <input type="hidden" name="itemId" value="<%= data[i].id %>">
+          <button type="submit">Del</button>
+        </form>
+      </td>
+    </tr>
+    <% } %>
+  </tbody>
+</table>
